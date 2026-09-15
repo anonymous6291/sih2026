@@ -1,0 +1,511 @@
+############################################################################################################################################
+#                                                    Query (request)   [/app/user/query]                                                   #
+############################################################################################################################################
+
+
+{
+    "query" : "User query",
+
+    "chat_id" : "chat_id or empty to create new chat",
+
+    "message_id" : "unique message id",
+
+    "model_id" : "modelId of model to be used",
+
+    "documents" : [
+                        {
+                            "document_name" : "abc.pdf",
+
+                            "document_id" : "document's id"
+                        },
+
+                        {
+                            "document_name" : "xyz.pdf",
+
+                            "document_id" : "document's id"
+                        }
+    ],
+
+    "tools" : [ "tool1", "tool2" ]
+}
+
+
+############################################################################################################################################
+#                                                   Fetch models (response)    [/models]                                                   #
+############################################################################################################################################
+
+{
+    "models" : [
+                     {
+                        "id" : "modelId1",
+
+                        "name" : "modelName1"
+                    },
+
+                    {
+                        "id" : "modelId2",
+
+                        "name" : "modelName2"
+                    }
+    ]
+}
+
+
+############################################################################################################################################
+#                                                 Upload documents (response)   [/upload]                                                  #
+############################################################################################################################################
+
+{
+    "documents" : [
+                        {
+                            "document_name" : "abc.pdf",
+
+                            "document_id" : "document's id"
+                        },
+
+                        {
+                            "document_name" : "xyz.pdf",
+
+                            "document_id" : "document's id"
+                       }
+    ]
+}
+
+
+############################################################################################################################################
+#                              All chat history (response)   [/history/chats, /admin/history/{username}/chats]                             #
+############################################################################################################################################
+
+{
+    "chats" : [
+                    {
+                        "chat_id" : "chat id1",
+
+                        "description" : "short description of the chat"
+                    },
+
+                    {
+                        "chat_id" : "chat id2",
+
+                        "description" : "short description of the chat"
+                    }
+    ]
+}
+
+
+############################################################################################################################################
+#                  History of chat with id "xyz" (response)   [/history/chat/{xyz}, /admin/history/{username}/chat/{xyz}]                  #
+############################################################################################################################################
+
+{
+    "messages" : [
+                        {
+                            "is_user" : true,
+
+                            "message_id" : "message id",
+
+                            "base64_message" : "base64 encoded message",
+
+                            "documents" : [
+                                                {
+                                                    "document_name" : "abc.pdf",
+
+                                                    "document_id" : "document's id"
+                                                },
+
+                                                {
+                                                    "document_name" : "xyz.pdf",
+
+                                                    "document_id" : "document's id"
+                                                }
+                            ]
+                        },
+
+                        {
+                            "is_user" : false,
+
+                            "message_id" : "message id",
+
+                            "base64_message" : "base64 encoded message",
+
+                            "documents" : [
+                                                {
+                                                    "document_name" : "abc.pdf",
+
+                                                    "document_id" : "document's id"
+                                                },
+
+                                                {
+                                                    "document_name" : "xyz.pdf",
+
+                                                    "document_id" : "document's id"
+                                                }
+                            ]
+                        }
+    ]
+}
+
+
+############################################################################################################################################
+#                                                   User event (response)   [/user/event]                                                  #
+############################################################################################################################################
+
+Normal:
+
+{
+    "status" : "success or error",
+
+    "is_event" : true,
+
+    "pending" : false,
+
+    "message" : "Hello World!!!!",
+
+    "chat_id" : "chat id",
+
+    "message_id" : "message id",
+
+    "documents" : [
+                            {
+                                "document_name" : "abc.pdf",
+
+                                "document_id" : "document's id"
+                            },
+
+                            {
+                                "document_name" : "xyz.pdf",
+
+                                "document_id" : "document's id"
+                           }
+    ]
+}
+
+
+Error:
+
+{
+    "status" : "error",
+
+    "message" : "Invalid query."
+}
+
+
+############################################################################################################################################
+#                                           Models Configs List (response)   [/admin/model/list]                                           #
+############################################################################################################################################
+
+{
+    "configs" : [
+                    {
+                        "model_id" : "model id",
+
+                        "model_name" : "name of the model",
+
+                        "model_description" : "Description of the model.",
+
+                        "is_default" : true,
+
+                        "model_url" : "url of the model",
+
+                        "max_tokens" : 10240,
+
+                        "temperature" : 0.2,
+
+                        "handler_class" : "handler class name with package"
+                    },
+
+                    {
+                        "model_id" : "model id",
+
+                        "model_name" : "name of the model",
+
+                        "model_description" : "Description of the model.",
+
+                        "is_default" : true,
+
+                        "model_url" : "url of the model",
+
+                        "max_tokens" : 10240,
+
+                        "temperature" : 0.2,
+
+                        "handler_class" : "handler class name with package"
+                    }
+    ]
+}
+
+
+############################################################################################################################################
+#                                           Models register (request)   [/admin/model/register]                                            #
+############################################################################################################################################
+
+{
+    "model_id" : "model id",
+
+    "model_name" : "name of the model",
+
+    "model_description" : "Description of the model.",
+
+    "is_default" : true,
+
+    "model_url" : "url of the model",
+
+    "max_tokens" : 10240,
+
+    "temperature" : 0.2,
+
+    "handler_class" : "handler class name with package"
+}
+
+
+############################################################################################################################################
+#                                                  Fetch profile (response)   [/profile]                                                   #
+############################################################################################################################################
+
+{
+    "username" : "username of user",
+
+    "role" : "role of user",
+
+    "name" : "name of user",
+
+    "dob" : "date of birth of user",
+
+    "phone_number" : "phone number of the user",
+
+    "email" : "email of the user",
+
+    "position" : "position of user in the department"
+}
+
+
+############################################################################################################################################
+#                        Fetch departments (response)   [/admin/departments]                        #
+############################################################################################################################################
+
+{
+    "departments" : [ "ADMIN", "TECHNICAL_DEPARTMENT", "MECHANICAL_DEPARTMENT" ]
+}
+
+
+############################################################################################################################################
+#                         Fetch all user's detail in department "xyz" (response)   [/admin/department/{xyz}/users]                         #
+############################################################################################################################################
+
+{
+    "users" : [
+                    {
+                        "username" : "xyz0@gmail.com",
+
+                        "role" : "TECHNICAL_DEPARTMENT",
+
+                        "name" : "anonymous0",
+
+                        "dob" : "01/01/2026",
+
+                        "phone_number" : "+911234567890",
+
+                        "email" : "xyz0@gmail.com",
+
+                        "position" : "SDE I"
+                    },
+
+                    {
+                        "username" : "xyz1@gmail.com",
+
+                        "role" : "TECHNICAL_DEPARTMENT",
+
+                        "name" : "anonymous0",
+
+                        "dob" : "01/01/2026",
+
+                        "phone_number" : "+911234567890",
+
+                        "email" : "xyz1@gmail.com",
+
+                        "position" : "SDE I"
+                    }
+    ]
+}
+
+
+############################################################################################################################################
+#                                              Register an user (request)   [/admin/register]                                              #
+############################################################################################################################################
+
+{
+    "username" : "username of user",
+
+    "password" : "password of the user",
+
+    "role" : "role of user",
+
+    "name" : "name of user",
+
+    "dob" : "date of birth of user",
+
+    "phone_number" : "phone number of the user",
+
+    "email" : "email of the user",
+
+    "position" : "position of the user"
+}
+
+
+############################################################################################################################################
+#                                 Fetch notices all or unseen (response)   [/notices/all, /notices/unseen]                                 #
+############################################################################################################################################
+
+{
+    "notices" : [
+                    {
+                        "notice_id" : "id of the notice",
+
+                        "description" : "short description of the notice",
+
+                        "message" : "",
+
+                        "seen" : false,
+
+                        "time" : "2026-09-11T12:15:40.452394178"
+                    },
+
+                    {
+                        "notice_id" : "id of the notice",
+
+                        "description" : "short description of the notice",
+
+                        "message" : "",
+
+                        "seen" : false,
+
+                        "time" : "2026-09-11T12:15:40.452394178"
+                    },
+    ]
+}
+
+
+
+############################################################################################################################################
+#                                         Fetch notice with id "xyz" (response)   [/notice/{xyz}]                                          #
+############################################################################################################################################
+
+{
+    "notice_id" : "id of the notice",
+
+    "description" : "short description of the notice",
+
+    "message" : "message of the notice",
+
+    "seen" : false,
+
+    "time" : "2026-09-11T12:15:40.452394178"
+}
+
+
+
+############################################################################################################################################
+#                                           Issue notice (request)    [/admin/issuenotice/{xyz}]                                           #
+############################################################################################################################################
+
+{
+    "description" : "short description of the notice",
+
+    "message" : "message of the notice"
+}
+
+
+
+############################################################################################################################################
+#                                          Issued notice event (response)   [/topic/notice/{xyz}]                                          #
+############################################################################################################################################
+
+{
+    "notice_id" : "id of the notice",
+
+    "description" : "short description of the notice"
+}
+
+
+
+############################################################################################################################################
+#                                                            Rag Tool (request)                                                            #
+############################################################################################################################################
+
+{
+    "username" : "username of the user",
+
+    "user_role" : "role of the user",
+
+    "query" : "query to search for"
+}
+
+
+
+############################################################################################################################################
+#                                                            Rag Tool (response)                                                           #
+############################################################################################################################################
+
+{
+    "error" : false,
+
+    "chunks" : [
+                    {
+                        "data" : "Java is a programming language."
+                    },
+
+                    {
+                        "data" : "Java is a high level programming language."
+                    }
+    ]
+}
+
+
+
+############################################################################################################################################
+#                                                           Coding Tool (request)                                                          #
+############################################################################################################################################
+
+{
+    "query" : "query to work upon",
+
+    "documents" : [
+                        {
+                            "document_name", "java.pdf",
+
+                            "base64_data" : "64Be78sese456458ew......"
+                        },
+
+                        {
+                            "document_name", "python.pdf",
+
+                            "base64_data" : "64Be78sese456458ew......"
+                        }
+    ]
+}
+
+
+
+############################################################################################################################################
+#                                                          Coding Tool (response)                                                          #
+############################################################################################################################################
+
+{
+    "error" : false,
+
+    "response" : "response from the tool",
+
+    "documents" : [
+                        {
+                            "document_name", "java.pdf",
+
+                            "base64_data" : "64Be78sese456458ew......"
+                        },
+
+                        {
+                            "document_name", "python.pdf",
+
+                            "base64_data" : "64Be78sese456458ew......"
+                        }
+    ]
+}

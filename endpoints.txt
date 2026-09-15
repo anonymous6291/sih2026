@@ -1,0 +1,68 @@
+#################################################################################################
+#                                            General                                            #
+#################################################################################################
+
+
+/login                                    => Login url
+/logout                                   => Logout url
+
+/home , /                                 => Home page url
+
+/ws                                       => Websocket url
+
+/models                                   => Get list of model names and ids
+
+/upload                                   => Upload file
+
+/history/chats                            => Get all chat history description
+/history/chat/{xyz}                       => Get history of chat "xyz"
+
+/user/event                               => Event receiving url
+/topic/notice/{xyz}                       => Url for receiving notices of department "xyz"
+
+/profile                                  => View user details
+
+/notices/all                              => View all notices
+/notices/unseen                           => View all unseen notices
+/notice/{xyz}                             => View notice with id "xyz"
+
+
+
+#################################################################################################
+#                                             Users                                             #
+#################################################################################################
+
+
+/user/download/{xyz}                      => Download file with documentId "xyz"
+
+/app/user/query                           => User chat url
+
+
+
+#################################################################################################
+#                                             Admin                                             #
+#################################################################################################
+
+
+/admin/getprofile/{xyz}                   => Get profile of user with username "xyz"
+
+/admin/issuenotice/{xyz}                  => Issue notice to department "xyz" or all departments if "xyz" == "all"
+
+/admin/departments                        => Get all departments
+/admin/department/{xyz}/users             => Get "xyz" department's all users
+
+/admin/register                           => Register admin and users
+/admin/deregister/{xyz}                   => Deregister user with username "xyz"
+
+/admin/download/{xyz}                     => Download file with documentId "xyz"
+
+/admin/health                             => Health of server
+
+/admin/model/list                         => List all models configs
+/admin/model/register                     => Register model
+/admin/model/deregister/{modelId}         => Deregister model with id "modelId"
+
+/admin/history/{username}/chats           => Get all chat history description of user "username"
+/admin/history/{username}/chat/{xyz}      => Get history of chat "xyz" of user "username"
+
+/app/admin/query                          => Admin chat url

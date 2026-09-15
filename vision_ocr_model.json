@@ -1,0 +1,6 @@
+{
+  "model_name": "Qwen3.5",
+  "model_url" : "http://127.0.0.1:9000/v1/chat/completions",
+  "temperature": 0.1,
+  "max_tokens": 10240
+}

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>AI Chat</title>
+
+    <!-- STOMP client -->
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.1.1/bundles/stomp.umd.min.js"></script>
+
+    <link href="admin_style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="sidebar-header">
+            <div class="logo">
+                AI
+            </div>
+
+            <button class="close-sidebar" id="closeSidebar">
+                ×
+            </button>
+        </div>
+
+        <button class="new-chat-button" id="newChatButton">
+            <span class="plus">+</span>
+            New chat
+        </button>
+
+        <div class="history-title">
+            Chats
+        </div>
+
+        <div class="chat-history" id="chatHistory">
+            <!-- Chat history will be inserted here -->
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="connection-status">
+                <span id="connectionDot"></span>
+                <span id="connectionText">Connecting...</span>
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN AREA ================= -->
+
+    <main class="main">
+
+        <!-- Top bar -->
+
+        <header class="topbar">
+
+            <button class="menu-button" id="menuButton">
+                ☰
+            </button>
+
+            <div class="current-chat-title" id="currentChatTitle">
+                New chat
+            </div>
+
+        </header>
+
+
+        <!-- Messages -->
+
+        <section class="messages" id="messages">
+
+            <div class="welcome" id="welcome">
+
+                <div class="welcome-icon">
+                    AI
+                </div>
+
+                <h1>How can I help you?</h1>
+
+                <p>
+                    Ask anything or start a new conversation.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- Input -->
+
+        <footer class="input-area">
+
+            <div class="input-container">
+                <button class="send-button" id="fileButton">↑</button>
+                <input type="file" id="fileInput" hidden multiple>
+                <ul id="fileList"></ul>
+
+                <textarea
+                        autocomplete="off"
+                        id="messageInput"
+                        placeholder="Message AI..."
+                        rows="1">
+                </textarea>
+
+                <button
+                        class="send-button"
+                        id="sendButton"
+                        title="Send">
+
+                    Send
+
+                </button>
+
+            </div>
+
+            <div class="input-disclaimer">
+                AI can make mistakes. Check important information.
+            </div>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script src="admin_script.js"></script>
+
+</body>
+</html>

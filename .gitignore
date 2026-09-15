@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+/chats/
+/documents/
+/log/
