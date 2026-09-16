@@ -45,9 +45,19 @@ public class RagTool implements Tool {
             []
             encryption key hash function SHA256 AES256
             """.replaceAll("\\{name}", TOOL_NAME);
+
     private static final String RUNNING_DESCRIPTION = "Using knowledge base....";
+
+    private static final String QUERY_SUB_URL = "/query";
+
+    private static final String UPLOAD_SUB_URL = "/upload";
+
+    private static final String DELETE_SUB_URL = "/delete";
+
     private final HttpClient httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build();
+
     private final ObjectMapper jsonParser = new ObjectMapper();
+
     @Value("${rag_tool.url}")
     private String ragUrl;
 
@@ -72,7 +82,7 @@ public class RagTool implements Tool {
     }
 
     @Override
-    public ToolResponse performTask(String username, UserRole userRole, String request) throws Exception {
+    public ToolResponse performTask(String username, UserRole userRole, String request) {
         try {
             RequestAndDocumentId requestAndDocumentId = parseRequest(request);
 
@@ -80,12 +90,12 @@ public class RagTool implements Tool {
                 return new ToolResponse("Invalid tool usage format.", List.of(), false);
             }
 
-            RagRequest ragRequest = new RagRequest(username, userRole, requestAndDocumentId.request());
+            RagQueryRequest ragQueryRequest = new RagQueryRequest(username, userRole, requestAndDocumentId.request());
 
-            String ragRequestString = jsonParser.writeValueAsString(ragRequest);
+            String ragRequestString = jsonParser.writeValueAsString(ragQueryRequest);
 
             HttpRequest httpRequest = HttpRequest
-                    .newBuilder(URI.create(ragUrl))
+                    .newBuilder(URI.create(ragUrl + QUERY_SUB_URL))
                     .POST(HttpRequest.BodyPublishers.ofString(ragRequestString))
                     .build();
 
@@ -94,15 +104,15 @@ public class RagTool implements Tool {
 
             String ragResponseString = httpResponse.body();
 
-            RagResponse ragResponse = jsonParser.readValue(ragResponseString, RagResponse.class);
+            RagQueryResponse ragQueryResponse = jsonParser.readValue(ragResponseString, RagQueryResponse.class);
 
             StringBuilder result = new StringBuilder("Rag result:\n");
 
-            if (ragResponse.error()) {
+            if (ragQueryResponse.error()) {
                 result.append("Error occurred while retrieving chunks.");
             } else {
                 int chunkNumber = 1;
-                for (Chunk chunk : ragResponse.chunks()) {
+                for (Chunk chunk : ragQueryResponse.chunks()) {
                     result.append(formatChunk(chunk, chunkNumber++));
 
                     result.append("------------------------");
@@ -121,12 +131,73 @@ public class RagTool implements Tool {
                 %s""".formatted(chunkNumber, chunk.data);
     }
 
-    record RagRequest(String username, UserRole user_role, String query) {
+    public boolean uploadDocument(UserRole userRole, String documentId, String content) {
+        try {
+            RagUploadRequest ragUploadRequest = new RagUploadRequest(userRole.toString(), documentId, content);
+
+            String requestString = jsonParser.writeValueAsString(ragUploadRequest);
+
+            HttpRequest httpRequest = HttpRequest
+                    .newBuilder(
+                            URI.create(ragUrl + UPLOAD_SUB_URL)
+                    )
+                    .POST(
+                            HttpRequest.BodyPublishers.ofString(requestString)
+                    )
+                    .build();
+
+            HttpResponse<Void> httpResponse = httpClient.send(
+                    httpRequest,
+                    HttpResponse.BodyHandlers.discarding()
+            );
+
+            return httpResponse.statusCode() == 200;
+        } catch (Exception _) {
+            return false;
+        }
+    }
+
+    public boolean deleteDocument(UserRole userRole, String documentId) {
+        try {
+            RagDeleteRequest ragDeleteRequest = new RagDeleteRequest(userRole.toString(), documentId);
+
+            String deleteRequestString = jsonParser.writeValueAsString(ragDeleteRequest);
+
+            HttpRequest httpRequest = HttpRequest
+
+                    .newBuilder(URI.create(ragUrl + DELETE_SUB_URL))
+
+                    .POST(
+                            HttpRequest.BodyPublishers.ofString(deleteRequestString)
+                    )
+
+                    .build();
+
+            HttpResponse<Void> httpResponse =
+                    httpClient.send(
+                            httpRequest,
+
+                            HttpResponse.BodyHandlers.discarding()
+                    );
+
+            return httpResponse.statusCode() == 200;
+        } catch (Exception _) {
+            return false;
+        }
+    }
+
+    record RagQueryRequest(String username, UserRole user_role, String query) {
     }
 
     record Chunk(String data) {
     }
 
-    record RagResponse(boolean error, List<Chunk> chunks) {
+    record RagQueryResponse(boolean error, List<Chunk> chunks) {
+    }
+
+    record RagUploadRequest(String user_role, String document_id, String content) {
+    }
+
+    record RagDeleteRequest(String user_role, String document_id) {
     }
 }

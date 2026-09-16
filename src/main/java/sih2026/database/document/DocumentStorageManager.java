@@ -35,6 +35,10 @@ public class DocumentStorageManager {
     }
 
     private String getFileName(String fileName) {
+        if (fileName == null) {
+            return "no_name";
+        }
+
         return Path.of(fileName).normalize().getFileName().toString();
     }
 

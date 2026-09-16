@@ -16,6 +16,7 @@ import sih2026.agent.tools.ToolManager;
 import sih2026.database.document.DocumentStorageManager;
 import sih2026.database.user.UserRole;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -91,7 +92,12 @@ public class DocumentParserTool implements Tool {
                         .append("]:\n");
 
                 try {
-                    result.append(readFile(documentData));
+                    String content = readFile(documentData.document_path(), documentData.mime_type());
+                    if (content == null) {
+                        result.append("File with mime type [").append(documentData.mime_type()).append("] is not supported.");
+                    } else {
+                        result.append(content);
+                    }
                 } catch (Exception e) {
                     result.append("Failed to read the content.");
                 }
@@ -104,18 +110,18 @@ public class DocumentParserTool implements Tool {
         return new ToolResponse(result.toString(), List.of(), false);
     }
 
-    public String readFile(DocumentStorageManager.DocumentData documentData) throws Exception {
-        DocumentParser documentParser = documentParsers.get(documentData.mime_type());
+    public String readFile(Path documentPath, String mimeType) throws Exception {
+        DocumentParser documentParser = documentParsers.get(mimeType);
 
         if (documentParser != null) {
-            return documentParser.getText(documentData.mime_type(), documentData.document_path());
+            return documentParser.getText(mimeType, documentPath);
         }
 
         for (DocumentParser anyParser : documentParsers.values()) {
-            if (anyParser.supportsMimeType(documentData.mime_type())) {
-                return anyParser.getText(documentData.mime_type(), documentData.document_path());
+            if (anyParser.supportsMimeType(mimeType)) {
+                return anyParser.getText(mimeType, documentPath);
             }
         }
-        return "File with mime type [" + documentData.mime_type() + "] not supported.";
+        return null;
     }
 }

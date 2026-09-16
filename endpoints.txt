@@ -26,6 +26,10 @@
 /notices/unseen                           => View all unseen notices
 /notice/{xyz}                             => View notice with id "xyz"
 
+/rag/upload                               => Upload documents to RAG
+/rag/documents                            => To view all documents in RAG database
+/rag/delete/{xyx}                         => Delete document with id "xyz" from RAG database
+/rag/download/{xyz}                       => Download uploaded file with id "xyz" from RAG database
 
 
 #################################################################################################
@@ -66,3 +70,8 @@
 /admin/history/{username}/chat/{xyz}      => Get history of chat "xyz" of user "username"
 
 /app/admin/query                          => Admin chat url
+
+/admin/rag/upload/{department}            => Upload documents to RAG database of department "department"
+/admin/rag/documents/{department}         => To view all documents in RAG database of department "department"
+/admin/rag/delete/{department}/{xyx}      => Delete document with id "xyz" from RAG database of department "department"
+/admin/rag/download/{department}/{xyz}    => Download uploaded file with id "xyz" from RAG database of department "department"
