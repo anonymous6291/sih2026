@@ -22,7 +22,9 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -58,6 +60,10 @@ public class RagTool implements Tool {
 
     private final ObjectMapper jsonParser = new ObjectMapper();
 
+    private final Base64.Encoder base64Encoder = Base64.getEncoder();
+
+    private final Base64.Decoder base64Decoder = Base64.getDecoder();
+
     @Value("${rag_tool.url}")
     private String ragUrl;
 
@@ -90,7 +96,9 @@ public class RagTool implements Tool {
                 return new ToolResponse("Invalid tool usage format.", List.of(), false);
             }
 
-            RagQueryRequest ragQueryRequest = new RagQueryRequest(username, userRole, requestAndDocumentId.request());
+            String base64Query = base64Encoder.encodeToString(requestAndDocumentId.request().getBytes());
+
+            RagQueryRequest ragQueryRequest = new RagQueryRequest(userRole, base64Query);
 
             String ragRequestString = jsonParser.writeValueAsString(ragQueryRequest);
 
@@ -128,12 +136,14 @@ public class RagTool implements Tool {
         return """
                 Chunk %d:
                 
-                %s""".formatted(chunkNumber, chunk.data);
+                %s""".formatted(chunkNumber, new String(base64Decoder.decode(chunk.base64_data)));
     }
 
     public boolean uploadDocument(UserRole userRole, String documentId, String content) {
         try {
-            RagUploadRequest ragUploadRequest = new RagUploadRequest(userRole.toString(), documentId, content);
+            String base64Content = base64Encoder.encodeToString(content.getBytes(StandardCharsets.UTF_8));
+
+            RagUploadRequest ragUploadRequest = new RagUploadRequest(userRole.toString(), documentId, base64Content);
 
             String requestString = jsonParser.writeValueAsString(ragUploadRequest);
 
@@ -186,16 +196,16 @@ public class RagTool implements Tool {
         }
     }
 
-    record RagQueryRequest(String username, UserRole user_role, String query) {
+    record RagQueryRequest(UserRole user_role, String base64_query) {
     }
 
-    record Chunk(String data) {
+    record Chunk(String base64_data) {
     }
 
     record RagQueryResponse(boolean error, List<Chunk> chunks) {
     }
 
-    record RagUploadRequest(String user_role, String document_id, String content) {
+    record RagUploadRequest(String user_role, String document_id, String base64_content) {
     }
 
     record RagDeleteRequest(String user_role, String document_id) {

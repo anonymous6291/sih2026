@@ -5,7 +5,7 @@
       "model_name" : "Qwen3.5",
       "model_description" : "Qwen3.5 4B parameter, 5 bit quantized.",
       "is_default" : true,
-      "model_url" : "http://127.0.0.1:9000/v1/chat/completions",
+      "model_url" : "http://100.102.148.43:8080/v1/chat/completions",
       "max_tokens" : 10240,
       "temperature" : 0.1,
       "handler_class" : "sih2026.agent.model.central.LLama"

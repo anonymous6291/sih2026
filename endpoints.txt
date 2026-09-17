@@ -6,30 +6,30 @@
 /login                                    => Login url
 /logout                                   => Logout url
 
-/home , /                                 => Home page url
+/home , /                                 => Home page url [GET]
 
-/ws                                       => Websocket url
+/ws                                       => Websocket url      (Websocket)
 
-/models                                   => Get list of model names and ids
+/models                                   => Get list of model names and ids [GET]
 
-/upload                                   => Upload file
+/upload                                   => Upload file, files must be sent as "files" parameter [POST]
 
-/history/chats                            => Get all chat history description
-/history/chat/{xyz}                       => Get history of chat "xyz"
+/history/chats                            => Get all chat history description [GET]
+/history/chat/{xyz}                       => Get history of chat "xyz" [GET]
 
-/user/event                               => Event receiving url
-/topic/notice/{xyz}                       => Url for receiving notices of department "xyz"
+/user/event                               => Chat event receiving url, subscribe it      (Websocket)
+/topic/notice/{xyz}                       => Url for receiving notices of department "xyz", subscribe it      (Websocket)
 
-/profile                                  => View user details
+/profile                                  => View user details [GET]
 
-/notices/all                              => View all notices
-/notices/unseen                           => View all unseen notices
-/notice/{xyz}                             => View notice with id "xyz"
+/notices/all                              => View all notices [GET]
+/notices/unseen                           => View all unseen notices [GET]
+/notice/{xyz}                             => View notice with id "xyz" [GET]
 
-/rag/upload                               => Upload documents to RAG
-/rag/documents                            => To view all documents in RAG database
-/rag/delete/{xyx}                         => Delete document with id "xyz" from RAG database
-/rag/download/{xyz}                       => Download uploaded file with id "xyz" from RAG database
+/rag/upload                               => Upload documents to RAG, files must be sent as "files" parameter [POST]
+/rag/documents                            => To view all documents in RAG database [GET]
+/rag/delete/{xyx}                         => Delete document with id "xyz" from RAG database [POST]
+/rag/download/{xyz}                       => Download uploaded file with id "xyz" from RAG database [GET]
 
 
 #################################################################################################
@@ -37,9 +37,9 @@
 #################################################################################################
 
 
-/user/download/{xyz}                      => Download file with documentId "xyz"
+/user/download/{xyz}                      => Download file with documentId "xyz" [GET]
 
-/app/user/query                           => User chat url
+/app/user/query                           => User chat url, send chat via "publish"      (Websocket)
 
 
 
@@ -48,30 +48,51 @@
 #################################################################################################
 
 
-/admin/getprofile/{xyz}                   => Get profile of user with username "xyz"
+/admin/getprofile/{xyz}                   => Get profile of user with username "xyz" [GET]
 
-/admin/issuenotice/{xyz}                  => Issue notice to department "xyz" or all departments if "xyz" == "all"
+/admin/issuenotice/{xyz}                  => Issue notice to department "xyz" or all departments if "xyz" == "all" [POST]
 
-/admin/departments                        => Get all departments
-/admin/department/{xyz}/users             => Get "xyz" department's all users
+/admin/departments                        => Get all departments [GET]
+/admin/department/{xyz}/users             => Get "xyz" department's all users [GET]
 
-/admin/register                           => Register admin and users
-/admin/deregister/{xyz}                   => Deregister user with username "xyz"
+/admin/register                           => Register admin and users [POST]
+/admin/deregister/{xyz}                   => Deregister user with username "xyz" [POST]
 
-/admin/download/{xyz}                     => Download file with documentId "xyz"
+/admin/download/{xyz}                     => Download file with documentId "xyz" [GET]
 
-/admin/health                             => Health of server
+/admin/health                             => Health of server [GET]
 
-/admin/model/list                         => List all models configs
-/admin/model/register                     => Register model
-/admin/model/deregister/{modelId}         => Deregister model with id "modelId"
+/admin/model/list                         => List all models configs [GET]
+/admin/model/register                     => Register model [POST]
+/admin/model/deregister/{modelId}         => Deregister model with id "modelId" [POST]
 
-/admin/history/{username}/chats           => Get all chat history description of user "username"
-/admin/history/{username}/chat/{xyz}      => Get history of chat "xyz" of user "username"
+/admin/history/{username}/chats           => Get all chat history description of user "username" [GET]
+/admin/history/{username}/chat/{xyz}      => Get history of chat "xyz" of user "username" [GET]
 
-/app/admin/query                          => Admin chat url
+/app/admin/query                          => Admin chat url, send chat via "publish"      (Websocket)
 
-/admin/rag/upload/{department}            => Upload documents to RAG database of department "department"
-/admin/rag/documents/{department}         => To view all documents in RAG database of department "department"
-/admin/rag/delete/{department}/{xyx}      => Delete document with id "xyz" from RAG database of department "department"
-/admin/rag/download/{department}/{xyz}    => Download uploaded file with id "xyz" from RAG database of department "department"
+/admin/rag/upload/{department}            => Upload documents to RAG database of department "department", files must be sent as "files" parameter [POST]
+/admin/rag/documents/{department}         => To view all documents in RAG database of department "department" [GET]
+/admin/rag/delete/{department}/{xyx}      => Delete document with id "xyz" from RAG database of department "department" [POST]
+/admin/rag/download/{department}/{xyz}    => Download uploaded file with id "xyz" from RAG database of department "department" [GET]
+
+
+
+#################################################################################################
+#                                             Notes                                             #
+#################################################################################################
+
+* When webpage loads then Front-end must first fetch profile via GET request to [/profile], then it will receive a json containing user's detail.
+  Extract the "role" from the json and websocket must subscribe to [/topic/notice/"role"].
+
+* Front-end must fetch chat history from [/history/chats]. When user click any of the previous chat then contents of chats must be fetched from
+  [/history/chat/"chatId"], where "chatId" is the chat id of the chat.
+
+* When user sends chat then documents are uploaded to [/upload], files are passed as "files" parameter. Then upload will return list of uploaded
+  documents names along with their id, this is then attached to the chat and query is sent to [/app/admin/query, /app/user/query] through websocket
+  publish method.
+
+* For each query sent, randomly assign the "message_id".
+
+* When user sends chat, if he/she is continuing the chat then the chat id must remain same but if new chat is opened then the chat id must be empty.
+  If new chat was opened then chat id must be set from the chat id returned from the server.
