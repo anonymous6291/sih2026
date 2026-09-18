@@ -31,6 +31,9 @@
 /rag/delete/{xyx}                         => Delete document with id "xyz" from RAG database [POST]
 /rag/download/{xyz}                       => Download uploaded file with id "xyz" from RAG database [GET]
 
+/execute                                  => Execute code [POST]
+/testExecute                              => Test if default code executes successfully or not [GET]
+
 
 #################################################################################################
 #                                             Users                                             #
